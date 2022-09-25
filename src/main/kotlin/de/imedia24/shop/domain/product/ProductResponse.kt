@@ -4,7 +4,7 @@ import de.imedia24.shop.db.entity.ProductEntity
 import java.math.BigDecimal
 
 data class ProductResponse(
-    val sku: String,
+    val sku: Int,
     val name: String,
     val description: String,
     val price: BigDecimal
