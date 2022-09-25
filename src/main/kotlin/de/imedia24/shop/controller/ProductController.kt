@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.websocket.server.PathParam
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 @RestController
 @RequestMapping(PATH, produces = [PRODUCE_TYPE])
@@ -40,6 +42,15 @@ class ProductController(private val productService: ProductService) {
             }.also {
                 logger.info("Request for products of skus: $skus")
             }
+    }
+
+    @PostMapping
+    fun addProduct(@RequestBody productRequest: ProductRequest): ResponseEntity<ProductResponse> {
+        return productService.addProduct(productRequest).let { createdProduct ->
+            ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{createdSku}").build(createdProduct.sku)
+            ).body(createdProduct) }
+            .also { logger.info("Request for saving new product")}
     }
 
 

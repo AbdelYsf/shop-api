@@ -1,6 +1,7 @@
 package de.imedia24.shop.service
 
 import de.imedia24.shop.db.repository.ProductRepository
+import de.imedia24.shop.domain.product.ProductRequest
 import de.imedia24.shop.domain.product.ProductResponse
 import de.imedia24.shop.domain.product.ProductResponse.Companion.toProductResponse
 import de.imedia24.shop.exception.NoSuchProductFoundException
@@ -25,6 +26,12 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
     override fun findProductsBySkus(skus: List<Int>): List<ProductResponse> {
         return productRepository.findAllBySkuIn(skus).map {entity-> entity.toProductResponse()}
     }
+
+    override fun addProduct(productRequest: ProductRequest): ProductResponse {
+        return productRepository.save(productRequest.toProductEntity())
+            .toProductResponse()
+    }
+
 
 
 }
