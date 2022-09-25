@@ -33,5 +33,10 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
     }
 
 
+    override fun updateProduct(productRequest: ProductRequest, sku: Int): ProductResponse {
+        val (name, description, price) = productRequest
+        productRepository.updateProduct(price, description ?: "", name, sku)
+        return findProductBySku(sku)
 
+    }
 }

@@ -11,4 +11,5 @@ interface ProductService{
 
     fun addProduct(productRequest: ProductRequest) : ProductResponse
 
+    fun updateProduct(productRequest: ProductRequest, sku: Int): ProductResponse
 }
