@@ -20,4 +20,11 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
             ?: throw NoSuchProductFoundException("Product with sku: $sku not found !!")
                 .also { logger.error("Product with sku: $sku not found !!") }
     }
+
+    @Transactional(readOnly=true)
+    override fun findProductsBySkus(skus: List<Int>): List<ProductResponse> {
+        return productRepository.findAllBySkuIn(skus).map {entity-> entity.toProductResponse()}
+    }
+
+
 }

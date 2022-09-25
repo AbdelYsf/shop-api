@@ -2,7 +2,7 @@ package de.imedia24.shop.controller
 
 import de.imedia24.shop.controller.ProductController.Companion.PATH
 import de.imedia24.shop.controller.ProductController.Companion.PRODUCE_TYPE
-
+import de.imedia24.shop.domain.product.ProductListResponse
 import de.imedia24.shop.domain.product.ProductResponse
 import de.imedia24.shop.service.ProductService
 import org.slf4j.LoggerFactory
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.websocket.server.PathParam
 
@@ -29,4 +30,17 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(productService.findProductBySku(sku))
             .also { logger.info("Request for product of sku: $sku") }
     }
+
+    @GetMapping
+    fun getProductsBySkus(@RequestParam(value = "skus", required = true) skus: List<Int>)
+        : ResponseEntity<ProductListResponse> {
+        return productService.findProductsBySkus(skus)
+            .let {foundProducts ->
+                ResponseEntity.ok(ProductListResponse(foundProducts.size, foundProducts))
+            }.also {
+                logger.info("Request for products of skus: $skus")
+            }
+    }
+
+
 }
